@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rose Garden</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a0a1a 0%, #2d1b3d 25%, #3d1f47 50%, #4a2555 75%, #2d1535 100%);
+            font-family: 'Georgia', 'Garamond', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Romantic hearts background pattern */
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.2;
+        }
+
+        .heart-float {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.2;
+            animation: heartFloat 6s ease-in infinite;
+        }
+
+        @keyframes heartFloat {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.2;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .instruction-top {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff69b4;
+            font-size: 20px;
+            font-weight: bold;
+            opacity: 0.8;
+            animation: fadeOutTop 3s ease-in-out forwards;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+        }
+
+        @keyframes fadeOutTop {
+            0% { opacity: 0.8; }
+            70% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
+        .rose-container {
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .rose {
+            font-size: 280px;
+            cursor: pointer;
+            animation: floatingRose 3s ease-in-out infinite, roseGlow 2s ease-in-out infinite;
+            user-select: none;
+            filter: drop-shadow(0 0 15px rgba(255, 20, 147, 0.6)) drop-shadow(0 0 30px rgba(255, 105, 180, 0.4));
+            text-shadow: 0 0 25px rgba(255, 20, 147, 0.5);
+            display: inline-block;
+        }
+
+        .rose:hover {
+            filter: drop-shadow(0 0 30px rgba(255, 20, 147, 0.9)) drop-shadow(0 0 50px rgba(255, 105, 180, 0.7));
+        }
+
+        @keyframes floatingRose {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-25px); }
+        }
+
+        @keyframes roseGlow {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 20, 147, 0.6)) drop-shadow(0 0 30px rgba(255, 105, 180, 0.4)); }
+            50% { filter: drop-shadow(0 0 30px rgba(255, 20, 147, 0.9)) drop-shadow(0 0 50px rgba(255, 105, 180, 0.7)); }
+        }
+
+        .message {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 56px;
+            color: #ff1493;
+            font-weight: bold;
+            text-shadow: 0 0 50px rgba(255, 20, 147, 0.8), 0 0 30px rgba(255, 105, 180, 0.6), 0 0 20px rgba(219, 39, 119, 0.5);
+            opacity: 0;
+            z-index: 20;
+            white-space: nowrap;
+            pointer-events: none;
+            letter-spacing: 3px;
+            font-style: italic;
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        @keyframes messageAppear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3) translateY(30px);
+            }
+            8% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) translateY(0);
+            }
+            92% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3) translateY(-30px);
+            }
+        }
+
+        .message.show {
+            animation: messageAppear 5s ease-in-out forwards;
+        }
+
+        .instruction-bottom {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff69b4;
+            font-size: 18px;
+            font-weight: bold;
+            opacity: 0.7;
+            animation: pulse 2s ease-in-out infinite;
+            z-index: 10;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+            50% { transform: translateX(-50%) scale(1.05); opacity: 0.9; }
+        }
+
+        .proceed-box {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .proceed-box.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .proceed-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+        }
+
+        .proceed-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px rgba(255, 20, 147, 0.8);
+        }
+
+        .proceed-btn:active {
+            transform: scale(0.95);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 20, 147, 0.2);
+            color: #ff69b4;
+            border: 2px solid #ff69b4;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            z-index: 15;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 20, 147, 0.3);
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.4);
+        }
+
+        /* Rose Shower */
+        .falling-rose {
+            position: fixed;
+            font-size: 40px;
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes rosefall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hearts background pattern -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <button class="back-btn" onclick="goBack()">← Back</button>
+
+    <div class="container">
+        <div class="instruction-top">✨ Click on the beautiful rose ✨</div>
+        
+        <div class="rose-container">
+            <div class="rose" id="rose">🌹</div>
+        </div>
+
+        <div class="message" id="message">Happy Rose Day My Love 😘😘</div>
+
+        <div class="instruction-bottom">⬇️ Click on the rose ⬇️</div>
+    </div>
+
+    <div class="proceed-box" id="proceedBox">
+        <button class="proceed-btn" onclick="goToValentine()">Proceed Further</button>
+    </div>
+
+    <script>
+        const rose = document.getElementById('rose');
+        const message = document.getElementById('message');
+        const proceedBox = document.getElementById('proceedBox');
+        const heartsBg = document.getElementById('heartsBg');
+        let messageShown = false;
+
+        // Create floating hearts background
+        function createFloatingHearts() {
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart-float');
+                heart.textContent = '♡';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 6 + 's';
+                heart.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                heartsBg.appendChild(heart);
+            }
+        }
+
+        createFloatingHearts();
+
+        // Rose Shower function
+        function startRoseShower() {
+            const interval = setInterval(() => {
+                if (messageShown) {
+                    const fallingRose = document.createElement('div');
+                    fallingRose.classList.add('falling-rose');
+                    fallingRose.textContent = '🌹';
+                    fallingRose.style.left = Math.random() * 100 + 'vw';
+                    fallingRose.style.top = '-50px';
+                    fallingRose.style.animation = `rosefall ${Math.random() * 3 + 4}s linear forwards`;
+                    document.body.appendChild(fallingRose);
+
+                    setTimeout(() => fallingRose.remove(), 7000);
+                }
+            }, 300);
+
+            // Stop rose shower after 5 seconds
+            setTimeout(() => clearInterval(interval), 5000);
+        }
+
+        rose.addEventListener('click', () => {
+            if (!messageShown) {
+                messageShown = true;
+                message.classList.add('show');
+                startRoseShower();
+
+                // Show proceed box after 5 seconds
+                setTimeout(() => {
+                    proceedBox.classList.add('show');
+                }, 5000);
+            }
+        });
+
+        function goToValentine() {
+            window.location.href = 'valentine.html';
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
